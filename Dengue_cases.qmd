@@ -1,0 +1,23 @@
+---
+title: "Dengue cases in Mexico"
+format: dashboard
+---
+
+## Dengue cases in Mexico
+
+The data was downloaded from the [Health Secretary](https://datos.gob.mx/busca/dataset/bases-de-datos-dengue-en-mexico) database webpage.
+
+
+## Row 1 
+
+```{r}
+
+```
+
+
+## Row 2 
+
+```{r}
+
+```
+

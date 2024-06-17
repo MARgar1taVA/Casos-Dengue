@@ -1,0 +1,126 @@
+---
+title: "Casos_Dengue"
+author: "Margarita Valdes"
+date: "2024-06-11"
+output: html_document
+---
+
+# Cases of Dengue virus in Mexico in 2024
+
+### Loading libraries
+
+```{r libs}
+library(tidyverse)
+```
+
+### Reading file
+
+Data was downloaded "Bases de datos Dengue en México 2020" from [Health Secretary](https://datos.gob.mx/busca/dataset/bases-de-datos-dengue-en-mexico). I downloaded both .csv files with the dictionaries for data and catalogue for variable keys.
+
+```{r read_data}
+(casos <- read_csv(file = "dengue_abierto.csv"))
+```
+### Filtering data
+
+I selected the columns I am interested in exploring and making a visuals.
+
+```{r select_data}
+
+(selected_variables <- casos %>% 
+          select(ID_REGISTRO,
+                 SEXO,
+                 EDAD_ANOS,
+                 ENTIDAD_RES,
+                 FECHA_SIGN_SINTOMAS,
+                 TIPO_PACIENTE,
+                 HEMORRAGICOS,
+                 DEFUNCION,
+                 DICTAMEN,
+                 TOMA_MUESTRA,
+                 RESULTADO_PCR,
+                 ESTATUS_CASO))
+
+```
+
+### Re-writing keys 
+
+Using the file "Catalogos_Dengue.xlsx" I rename the keys on most variables, to understand the data set, filter, and make visualizations.
+
+```{r rename_vars}
+(rename_variables <- selected_variables %>% 
+          mutate(SEXO = case_when(SEXO == 1 ~ "Mujer",
+                                  SEXO == 2 ~ "Hombre")) %>% 
+          mutate(ENTIDAD_RES = case_when(ENTIDAD_RES == "01" ~ "Aguascalientes",
+                                    ENTIDAD_RES == "02" ~ "Baja California",
+                                    ENTIDAD_RES == "03" ~ "Baja California Sur",
+                                    ENTIDAD_RES == "04" ~ "Campeche",
+                                    ENTIDAD_RES == "05" ~ "Coahuila",
+                                    ENTIDAD_RES == "06" ~ "Colima",
+                                    ENTIDAD_RES == "07" ~ "Chiapas",
+                                    ENTIDAD_RES == "08" ~ "Chihuahua",
+                                    ENTIDAD_RES == "09" ~ "Ciudad de México",
+                                    ENTIDAD_RES == "10" ~ "Durango",
+                                    ENTIDAD_RES == "11" ~ "Guanajuato",
+                                    ENTIDAD_RES == "12" ~ "Guerrero",
+                                    ENTIDAD_RES == "13" ~ "Hidalgo",
+                                    ENTIDAD_RES == "14" ~ "Jalisco",
+                                    ENTIDAD_RES == "15" ~ "México",
+                                    ENTIDAD_RES == "16" ~ "Michoacán",
+                                    ENTIDAD_RES == "17" ~ "Morelos",
+                                    ENTIDAD_RES == "18" ~ "Nayarit",
+                                    ENTIDAD_RES == "19" ~ "Nuevo León",
+                                    ENTIDAD_RES == "20" ~ "Oaxaca",
+                                    ENTIDAD_RES == "21" ~ "Puebla",
+                                    ENTIDAD_RES == "22" ~ "Querétaro",
+                                    ENTIDAD_RES == "23" ~ "Quintana Roo",
+                                    ENTIDAD_RES == "24" ~ "San Luis Potosí",
+                                    ENTIDAD_RES == "25" ~ "Sinaloa",
+                                    ENTIDAD_RES == "26" ~ "Sonora",
+                                    ENTIDAD_RES == "27" ~ "Tabasco",
+                                    ENTIDAD_RES == "28" ~ "Tamaulipas",
+                                    ENTIDAD_RES == "29" ~ "Tlaxcala",
+                                    ENTIDAD_RES == "30" ~ "Veracruz",
+                                    ENTIDAD_RES == "31" ~ "Yucatán",
+                                    ENTIDAD_RES == "32" ~ "Zacatecas",
+                                    ENTIDAD_RES == "33" ~ "Otros paises",
+                                    ENTIDAD_RES == "34" ~ "Otros paises",
+                                    ENTIDAD_RES == "35" ~ "Otros paises",
+                                    .default = as.character(ENTIDAD_RES))) %>% 
+           mutate(TIPO_PACIENTE = case_when(TIPO_PACIENTE == 1 ~ "ambulatorio",
+                                            TIPO_PACIENTE == 2 ~ "hospitalizado")) %>% 
+           mutate(HEMORRAGICOS = case_when(HEMORRAGICOS == 1 ~ "hemorragico",
+                                           HEMORRAGICOS == 2 ~ "no hemorragico")) %>% 
+           mutate(DEFUNCION = case_when(DEFUNCION == 1 ~ "si",
+                                        DEFUNCION == 2 ~ "no")) %>% 
+           mutate(DICTAMEN = case_when(DICTAMEN == 1 ~ "dengue",
+                                       DICTAMEN == 2 ~ "chikungunya",
+                                       DICTAMEN == 3 ~ "negativo",
+                                       DICTAMEN == 4 ~ "en estudio",
+                                       DICTAMEN == 5 ~ "no aplica")) %>% 
+           mutate(TOMA_MUESTRA = case_when(TOMA_MUESTRA == 1 ~ "si",
+                                           TOMA_MUESTRA == 2 ~ "no")) %>% 
+           mutate(RESULTADO_PCR = case_when(RESULTADO_PCR == 1 ~ "DENV1",
+                                            RESULTADO_PCR == 2 ~ "DENV2",
+                                            RESULTADO_PCR == 3 ~ "DENV3",
+                                            RESULTADO_PCR == 4 ~ "DENV4",
+                                            RESULTADO_PCR == 5 ~ "sin serotipo aislado")) %>% 
+           mutate(ESTATUS_CASO = case_when(ESTATUS_CASO == 1 ~ "probable",
+                                           ESTATUS_CASO == 2 ~ "confirmado",
+                                           ESTATUS_CASO == 3 ~ "descartado"))
+                   
+ )
+          
+
+```
+
+
+
+### Save
+
+```{r save}
+
+# write_csv(rename_variables,
+#           file = "clean_dengue_data.csv")
+
+```
+

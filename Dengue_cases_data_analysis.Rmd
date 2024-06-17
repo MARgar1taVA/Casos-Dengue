@@ -1,0 +1,64 @@
+---
+title: "Data analysis dengue"
+author: "Margarita Valdes"
+date: "2024-06-16"
+output: html_document
+---
+
+
+# Data analysis and Visualization of Dengue cases in Mexico
+
+### Loading libraries
+
+```{r libs}
+library(tidyverse)
+```
+
+### Read file
+
+```{r read_file}
+(clean_data <- read_csv(file = "clean_dengue_data.csv")
+)
+```
+### Factorize
+
+Made descriptive variables factors and established their levels.
+
+```{r var_fct}
+
+(fct_data <- clean_data %>% 
+          mutate(SEXO = factor(SEXO, 
+                               levels = c("Mujer", "Hombre"))) %>% 
+          mutate(ENTIDAD_RES = factor(ENTIDAD_RES)) %>% 
+          mutate(TIPO_PACIENTE = factor(TIPO_PACIENTE,
+                                        levels = c("ambulatorio", "hospitalizado"))) %>% 
+          mutate(HEMORRAGICOS = factor(HEMORRAGICOS,
+                                       levels = c("hemorragico", "no hemorragico"))) %>% 
+          mutate(DEFUNCION = factor(DEFUNCION,
+                                    levels = c("si", "no"))) %>% 
+          mutate(DICTAMEN = factor(DICTAMEN,
+                                   levels = c("dengue", "chikungunya", "negativo", "en estudio", "no aplica"))) %>% 
+          mutate(TOMA_MUESTRA = factor(TOMA_MUESTRA,
+                                       levels = c("si", "no"))) %>% 
+          mutate(RESULTADO_PCR = factor(RESULTADO_PCR,
+                                        levels = c("DENV1","DENV2", "DENV3", "DENV4", "sin serotipo aislado"))) %>% 
+          mutate(ESTATUS_CASO = factor(ESTATUS_CASO,
+                                       levels = c("confirmado", "probable", "descartado")))
+           )
+
+```
+
+Filtrar casos descartadosd
+
+```{r}
+(positive_cases <- fct_data %>% 
+          select(ID_REGISTRO, 
+                 FECHA_SIGN_SINTOMAS,
+                 DICTAMEN,
+                 TOMA_MUESTRA,
+                 RESULTADO_PCR,
+                 ESTATUS_CASO) %>% 
+           filter(ESTATUS_CASO != "descartado")
+)
+```
+
